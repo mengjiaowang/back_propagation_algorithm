@@ -1,4 +1,5 @@
 #include "NeuralNetwork.h"
+#include "ActivationFunction.h"
 #include <vector>
 using namespace std;
 
@@ -54,4 +55,12 @@ vector<double> & NeuralNetwork::getWeights(){
 
 void NeuralNetwork::computeOutputs(vector<double> &xValues){
 
+}
+
+void NeuralNetwork::setHiddenLayerActivationFunction(ActivationFunction *fun){
+    this->hiddenActi = fun;
+}
+
+void NeuralNetwork::setOutputLayerActivationFunction(ActivationFunction *fun){
+    this->outputActi = fun;
 }

@@ -2,6 +2,8 @@
 #define NEURALNETWORK_H_
 
 #include <vector>
+#include "ActivationFunction.h"
+
 using namespace std;
 
 class NeuralNetwork{
@@ -13,6 +15,8 @@ class NeuralNetwork{
         void setWeights(vector<double> &weights);
         vector<double> & getWeights();
         void computeOutputs(vector<double> &xValues);
+        void setHiddenLayerActivationFunction(ActivationFunction *fun);
+        void setOutputLayerActivationFunction(ActivationFunction *fun);
 
     private:
 
@@ -45,6 +49,10 @@ class NeuralNetwork{
         vector<double> ihPrevBiasesDelta;
         vector<vector<double> > hoPrevWeightsDelta;
         vector<double> hoPrevBiasesDelta;
+
+        ActivationFunction *hiddenActi;
+        ActivationFunction *outputActi;
+
 };
 
 #endif
