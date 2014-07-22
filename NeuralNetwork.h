@@ -10,19 +10,12 @@ class NeuralNetwork{
 
     public:
         
-        NeuralNetwork(int numInput, int numHidden, int numOutput);
+        NeuralNetwork(int numInput, int numHidden, int numOutput, 
+                ActivationFunction &hidden, ActivationFunction &output);
         void updateWeights(vector<double> &tValues, double eta, double alpha);
         void setWeights(vector<double> &weights);
-        vector<double> & getWeights();
+        void getWeights(vector<double> &weights);
         void computeOutputs(vector<double> &xValues);
-        void setHiddenLayerActivationFunction(ActivationFunction *fun);
-        void setOutputLayerActivationFunction(ActivationFunction *fun);
-
-    private:
-
-        int numInput;
-        int numHidden;
-        int numOutput;
 
         // Neural Network Parameters //
         // input
@@ -39,6 +32,12 @@ class NeuralNetwork{
         // onput
         vector<double> outputs;
 
+    private:
+
+        int numInput;
+        int numHidden;
+        int numOutput;
+
         // Back Propagation Extra Data //
         // output gradients for back propagation
         vector<double> oGrads;
@@ -50,8 +49,8 @@ class NeuralNetwork{
         vector<vector<double> > hoPrevWeightsDelta;
         vector<double> hoPrevBiasesDelta;
 
-        ActivationFunction *hiddenActi;
-        ActivationFunction *outputActi;
+        ActivationFunction &hiddenActi;
+        ActivationFunction &outputActi;
 
 };
 

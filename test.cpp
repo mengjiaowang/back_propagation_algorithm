@@ -5,7 +5,9 @@
 using namespace std;
 
 int main(){
-    NeuralNetwork nn(3,4,2);
+    Sigmoid sigmoid;
+    Tanh tanh;
+    NeuralNetwork nn(3,4,2, sigmoid, tanh);
     BackPropagation bp(nn);
     return 0;
 }
