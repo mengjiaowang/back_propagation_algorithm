@@ -29,23 +29,18 @@ NeuralNetwork::NeuralNetwork(int numInput, int numHidden, int numOutput,
     hoSums.resize(numOutput);
     hoBiases.resize(numOutput);
     outputs.resize(numOutput);
-
-    oGrads.resize(numOutput);
-    hGrads.resize(numHidden);
-
-    ihPrevWeightsDelta.resize(numInput);
-    for(unsigned int i = 0; i != numInput; ++i){
-        ihPrevWeightsDelta[i].resize(numHidden);
-    }
-    ihPrevBiasesDelta.resize(numHidden);
-    hoPrevWeightsDelta.resize(numHidden);
-    for(unsigned int i = 0; i != numHidden; ++i){
-        hoPrevWeightsDelta[i].resize(numOutput);
-    }
-    hoPrevBiasesDelta.resize(numOutput);
 }
 
-void NeuralNetwork::updateWeights(vector<double> &tValues, double eta, double alpha){
+int NeuralNetwork::getNumInput(){
+    return numInput;
+}
+
+int NeuralNetwork::getNumHidden(){
+    return numHidden;
+}
+
+int NeuralNetwork::getNumOutput(){
+    return numOutput;
 }
 
 void NeuralNetwork::setWeights(vector<double> &weights){

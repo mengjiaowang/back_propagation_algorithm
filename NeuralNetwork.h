@@ -7,17 +7,20 @@
 using namespace std;
 
 class NeuralNetwork{
-
+    friend class BackPropagation;
     public:
         
         NeuralNetwork(int numInput, int numHidden, int numOutput, 
                 ActivationFunction &hidden, ActivationFunction &output);
-        void updateWeights(vector<double> &tValues, double eta, double alpha);
         void setWeights(vector<double> &weights);
         void getWeights(vector<double> &weights);
         void computeOutputs(vector<double> &xValues);
+        int getNumInput();
+        int getNumHidden();
+        int getNumOutput();
 
-        // Neural Network Parameters //
+    protected: // Neural Network Parameters //
+
         // input
         vector<double> inputs;
         // input to hidden
@@ -32,26 +35,14 @@ class NeuralNetwork{
         // onput
         vector<double> outputs;
 
+        ActivationFunction &hiddenActi;
+        ActivationFunction &outputActi;
+
     private:
 
         int numInput;
         int numHidden;
         int numOutput;
-
-        // Back Propagation Extra Data //
-        // output gradients for back propagation
-        vector<double> oGrads;
-        // hidden gradients for back propagation
-        vector<double> hGrads;
-        // for momentum with back propagation
-        vector<vector<double> > ihPrevWeightsDelta;
-        vector<double> ihPrevBiasesDelta;
-        vector<vector<double> > hoPrevWeightsDelta;
-        vector<double> hoPrevBiasesDelta;
-
-        ActivationFunction &hiddenActi;
-        ActivationFunction &outputActi;
-
 };
 
 #endif
