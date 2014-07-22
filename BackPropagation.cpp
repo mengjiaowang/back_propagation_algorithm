@@ -40,7 +40,7 @@ void BackPropagation::setMaxIteration(int iteration){
 }
 
 void BackPropagation::initializeWeights(){
-    srand (time(NULL));
+    srand(time(0));
     int numWeights = (numInput + numOutput) * numHidden + numHidden + numOutput;
     vector<double> weight;
     weight.resize(numWeights);
