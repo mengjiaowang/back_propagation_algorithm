@@ -14,7 +14,7 @@ class NeuralNetwork{
                 ActivationFunction &hidden, ActivationFunction &output);
         void setWeights(vector<double> &weights);
         void getWeights(vector<double> &weights);
-        void computeOutputs(vector<double> &xValues);
+        vector<double> &computeOutputs(vector<double> &xValues);
         int getNumInput();
         int getNumHidden();
         int getNumOutput();

@@ -2,6 +2,7 @@
 #include <fstream>
 #include "NeuralNetwork.h"
 #include "BackPropagation.h"
+#include "Normalization.h"
 
 using namespace std;
 
@@ -32,14 +33,29 @@ int main(){
         dataset.back()[12+label] = 1;
     }
     datafile.close();
-    vector<vector<double> > train(dataset.begin(), dataset.begin()+100);
-    vector<vector<double> > test(dataset.begin()+100, dataset.end());
+
+    // normalization
+    Normalization norm;
+    norm.normalize(dataset, 0, 13);
+    vector<vector<double> > train(dataset.begin(), dataset.begin()+150);
+    vector<vector<double> > test(dataset.begin()+150, dataset.end());
     
     // start the training process
     bp.setLearningRate(0.1);
     bp.setMomentum(0.04);
     bp.setMaxIteration(30);
     bp.train(train);
+
+    // start the test process
+    for(int i = 0; i != test.size(); ++i){
+        vector<double> xValues(test[i].begin(), test[i].begin()+13);
+        vector<double> yValues(test[i].begin()+13, test[i].end());
+        vector<double> &outputs = nn.computeOutputs(xValues);
+        cout << "Test: output:(" << outputs[0] << "," <<
+            outputs[1] << "," << outputs[2] << ")" <<
+            " tValues:(" << yValues[0] << "," << yValues[1] << "," <<
+            yValues[2] << ")" << endl;
+    }
 
     return 0;
 }

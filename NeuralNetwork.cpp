@@ -100,10 +100,10 @@ void NeuralNetwork::getWeights(vector<double> &weights){
     }
 }
 
-void NeuralNetwork::computeOutputs(vector<double> &xValues){
+vector<double> &NeuralNetwork::computeOutputs(vector<double> &xValues){
     if(xValues.size() != numInput){
         cout << "The input values does not match the network input layers" << endl;
-        return;
+        return outputs;
     }
     // initialize input to hidden sums 
     for(int i = 0; i != numHidden; ++i){
@@ -145,5 +145,6 @@ void NeuralNetwork::computeOutputs(vector<double> &xValues){
     for(int i = 0; i != numOutput; ++i){
         outputs[i] = outputActi(hoSums[i]);
     }
+    return outputs;
 }
 
