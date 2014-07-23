@@ -11,7 +11,7 @@ int main(){
     // define network structure
     Sigmoid sigmoid;
     Tanh tanh;
-    NeuralNetwork nn(13,20,3, sigmoid, tanh);
+    NeuralNetwork nn(13,100,3, sigmoid, tanh);
     BackPropagation bp(nn);
 
     // prepare training data
@@ -36,14 +36,15 @@ int main(){
 
     // normalization
     Normalization norm;
-    norm.normalize(dataset, 0, 13);
-    vector<vector<double> > train(dataset.begin(), dataset.begin()+150);
-    vector<vector<double> > test(dataset.begin()+150, dataset.end());
+    norm.normalize(dataset, 0, 12);
+    reverse(dataset.begin(), dataset.end());
+    vector<vector<double> > train(dataset.begin(), dataset.end());
+    vector<vector<double> > test(dataset.begin(), dataset.end());
     
     // start the training process
-    bp.setLearningRate(0.1);
-    bp.setMomentum(0.04);
-    bp.setMaxIteration(30);
+    bp.setLearningRate(0.0005);
+    bp.setMomentum(0.0);
+    bp.setMaxIteration(2000);
     bp.train(train);
 
     // start the test process

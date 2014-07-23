@@ -77,6 +77,8 @@ double BackPropagation::getError(vector<double> &output, vector<double> &yValues
     return error;
 }
 
+
+
 void BackPropagation::updateWeights(vector<double> &yValues){
     if(nn.outputs.size() != yValues.size()){
         cout << "The yValues does not match network structure" << endl;
