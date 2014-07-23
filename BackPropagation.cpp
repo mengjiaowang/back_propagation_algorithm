@@ -52,18 +52,48 @@ void BackPropagation::initializeWeights(){
     nn.setWeights(weight);
 }
 
-void BackPropagation::train(vector<vector<double> > &dataset){
+void BackPropagation::initializeGradients(){
+    for(int i = 0; i != oGrads.size(); ++i){
+        oGrads[i] = 0;
+    }
+    for(int i = 0; i != hGrads.size(); ++i){
+        hGrads[i] = 0;
+    }
+}
+
+void BackPropagation::trainStochastic(vector<vector<double> > &dataset){
     initializeWeights();
     int iteration = maxIteration;
     while(iteration--) {
         double error = 0;
         for(unsigned int i = 0; i != dataset.size(); ++i){
+            initializeGradients();
             vector<double> xValues(dataset[i].begin(), dataset[i].begin() + numInput);
             vector<double> yValues(dataset[i].begin() + numInput, dataset[i].end());
             nn.computeOutputs(xValues);
             error += getError(nn.outputs, yValues);
-            updateWeights(yValues);
+            calculateGradients(yValues);
+            updateWeights();
         }
+        cout << "Iteration #" << maxIteration - iteration << "\tError:"
+            << error/dataset.size() << endl;
+    }
+}
+
+void BackPropagation::trainBatch(vector<vector<double> > &dataset){
+    initializeWeights();
+    int iteration = maxIteration;
+    while(iteration--) {
+        double error = 0;
+        initializeGradients();
+        for(unsigned int i = 0; i != dataset.size(); ++i){
+            vector<double> xValues(dataset[i].begin(), dataset[i].begin() + numInput);
+            vector<double> yValues(dataset[i].begin() + numInput, dataset[i].end());
+            nn.computeOutputs(xValues);
+            error += getError(nn.outputs, yValues);
+            calculateGradients(yValues);
+        }
+        updateWeights();
         cout << "Iteration #" << maxIteration - iteration << "\tError:"
             << error/dataset.size() << endl;
     }
@@ -77,16 +107,14 @@ double BackPropagation::getError(vector<double> &output, vector<double> &yValues
     return error;
 }
 
-
-
-void BackPropagation::updateWeights(vector<double> &yValues){
+void BackPropagation::calculateGradients(vector<double> &yValues){
     if(nn.outputs.size() != yValues.size()){
         cout << "The yValues does not match network structure" << endl;
         return;
     }
     // compute the output gradients
     for(int i = 0; i != oGrads.size(); ++i){
-        oGrads[i] = nn.outputActi.derivative(nn.outputs[i]) * (yValues[i] - nn.outputs[i]);
+        oGrads[i] += nn.outputActi.derivative(nn.outputs[i]) * (yValues[i] - nn.outputs[i]);
     }
     // compute the hidden gradients
     for(int i = 0; i != hGrads.size(); ++i){
@@ -94,8 +122,11 @@ void BackPropagation::updateWeights(vector<double> &yValues){
         for(int j = 0; j != numOutput; ++j){
             sum += oGrads[j] * nn.hoWeights[i][j];
         }
-        hGrads[i] = nn.hiddenActi.derivative(nn.ihOutputs[i]) * sum;
+        hGrads[i] += nn.hiddenActi.derivative(nn.ihOutputs[i]) * sum;
     }
+}
+
+void BackPropagation::updateWeights(){
     // update hidden to output weights
     for(int i = 0; i != nn.hoWeights.size(); ++i){
         for(int j = 0; j != nn.hoWeights[i].size(); ++j){

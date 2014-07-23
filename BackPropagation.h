@@ -10,7 +10,8 @@ class BackPropagation{
         void setLearningRate(double eta);
         void setMomentum(double alpha);
         void setMaxIteration(int iteration);
-        void train(vector<vector<double> > &dataset);
+        void trainBatch(vector<vector<double> > &dataset);
+        void trainStochastic(vector<vector<double> > &dataset);
 
     private:
 
@@ -23,8 +24,10 @@ class BackPropagation{
         int maxIteration;
 
         double getError(vector<double> &output, vector<double> &yValues);
-        void updateWeights(vector<double> &yValues); // in-place update
+        void updateWeights(); // in-place update
+        void calculateGradients(vector<double> &yValues);
         void initializeWeights();
+        void initializeGradients();
 
         // Back Propagation Extra Data //
         // output gradients for back propagation
