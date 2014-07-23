@@ -46,7 +46,7 @@ void BackPropagation::initializeWeights(){
     weight.resize(numWeights);
     for(int i = 0; i != numWeights; ++i){
         int r = rand() % 100 + 1;
-        double w = r/100;
+        double w = r/100.0;
         weight[i] = w;
     }
     nn.setWeights(weight);

@@ -4,23 +4,23 @@
 class ActivationFunction{
     public:
         ActivationFunction();
-        virtual double operator()(int x) = 0;
-        virtual double derivative(int x) = 0;
+        virtual double operator()(double x) = 0;
+        virtual double derivative(double x) = 0;
     private:
 };
 
 class Sigmoid:public ActivationFunction{
     public:
         Sigmoid();
-        double operator()(int x);
-        double derivative(int x);
+        double operator()(double x);
+        double derivative(double x);
 };
 
 class Tanh:public ActivationFunction{
     public:
         Tanh();
-        double operator()(int x);
-        double derivative(int x);
+        double operator()(double x);
+        double derivative(double x);
 };
 
 #endif

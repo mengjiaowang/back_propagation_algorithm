@@ -38,7 +38,7 @@ int main(){
     // start the training process
     bp.setLearningRate(0.1);
     bp.setMomentum(0.04);
-    bp.setMaxIteration(1000);
+    bp.setMaxIteration(30);
     bp.train(train);
 
     return 0;
