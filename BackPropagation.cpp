@@ -45,8 +45,8 @@ void BackPropagation::initializeWeights(){
     vector<double> weight;
     weight.resize(numWeights);
     for(int i = 0; i != numWeights; ++i){
-        int r = rand() % 100 + 1;
-        double w = r/100.0;
+        int r = rand() % 100000 + 1;
+        double w = r/100000.0;
         weight[i] = w;
     }
     nn.setWeights(weight);
@@ -73,7 +73,7 @@ void BackPropagation::trainStochastic(vector<vector<double> > &dataset){
             nn.computeOutputs(xValues);
             error += getError(nn.outputs, yValues);
             calculateGradients(yValues);
-            updateWeights();
+            if(iteration != 0 || i != dataset.size() - 1) updateWeights();
         }
         cout << "Iteration #" << maxIteration - iteration << "\tError:"
             << error/dataset.size() << endl;
@@ -93,7 +93,7 @@ void BackPropagation::trainBatch(vector<vector<double> > &dataset){
             error += getError(nn.outputs, yValues);
             calculateGradients(yValues);
         }
-        updateWeights();
+        if(iteration != 0) updateWeights();
         cout << "Iteration #" << maxIteration - iteration << "\tError:"
             << error/dataset.size() << endl;
     }

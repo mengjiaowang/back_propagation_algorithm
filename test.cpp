@@ -6,18 +6,57 @@
 
 using namespace std;
 
+void loadDataset(char *path, vector<vector<double> > &dataset);
+void evaluation(NeuralNetwork &nn, vector<vector<double> > &testdata);
+
 int main(){
 
     // define network structure
     Sigmoid sigmoid;
     Tanh tanh;
-    NeuralNetwork nn(13,50,3, sigmoid, tanh);
+    NeuralNetwork nn(13,200,3, sigmoid, tanh);
     BackPropagation bp(nn);
 
     // prepare training data
+    vector<vector<double> > dataset;
+    loadDataset("data/wine.dat", dataset);
+
+    // normalization
+    Normalization norm;
+    norm.normalize(dataset, 0, 12);
+    vector<vector<double> > train(dataset.begin(), dataset.end());
+    vector<vector<double> > test(dataset.begin(), dataset.end());
+    
+    // start the training process
+    bp.setLearningRate(0.0001);
+    bp.setMomentum(0.0);
+    bp.setMaxIteration(10000);
+    bp.trainBatch(train);
+    //bp.trainStochastic(train);
+
+    // start the evaluation process
+    evaluation(nn, test);
+
+    return 0;
+}
+
+void evaluation(NeuralNetwork &nn, vector<vector<double> > &test){
+
+    int correct = 0;
+    for(int i = 0; i != test.size(); ++i){
+        vector<double> xValues(test[i].begin(), test[i].begin()+13);
+        vector<double> yValues(test[i].begin()+13, test[i].end());
+        vector<double> &outputs = nn.computeOutputs(xValues);
+        if(outputs[0] > outputs[1] && outputs[0] > outputs[2] && yValues[0] == 1) correct ++;
+        if(outputs[1] > outputs[0] && outputs[1] > outputs[2] && yValues[1] == 1) correct ++;
+        if(outputs[2] > outputs[0] && outputs[2] > outputs[1] && yValues[2] == 1) correct ++;
+    }
+    cout << "Accuracy:" << (double)correct/test.size() << endl;
+}
+
+void loadDataset(char *path, vector<vector<double> > &dataset){
     fstream datafile;
     datafile.open ("data/wine.dat", ios::in);
-    vector<vector<double> > dataset;
     while(!datafile.eof()){
         vector<double> row;
         dataset.push_back(row);
@@ -34,28 +73,4 @@ int main(){
     }
     datafile.close();
 
-    // normalization
-    Normalization norm;
-    norm.normalize(dataset, 0, 12);
-    vector<vector<double> > train(dataset.begin(), dataset.end());
-    vector<vector<double> > test(dataset.begin(), dataset.end());
-    
-    // start the training process
-    bp.setLearningRate(0.001);
-    bp.setMomentum(0.0);
-    bp.setMaxIteration(2000);
-    bp.trainStochastic(train);
-/*
-    // start the test process
-    for(int i = 0; i != test.size(); ++i){
-        vector<double> xValues(test[i].begin(), test[i].begin()+13);
-        vector<double> yValues(test[i].begin()+13, test[i].end());
-        vector<double> &outputs = nn.computeOutputs(xValues);
-        cout << "Test: output:(" << outputs[0] << "," <<
-            outputs[1] << "," << outputs[2] << ")" <<
-            " tValues:(" << yValues[0] << "," << yValues[1] << "," <<
-            yValues[2] << ")" << endl;
-    }
-*/
-    return 0;
 }
