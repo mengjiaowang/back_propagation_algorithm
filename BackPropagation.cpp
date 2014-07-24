@@ -2,6 +2,7 @@
 #include "NeuralNetwork.h"
 #include <iostream>
 #include <ctime>
+#include <cmath>
 
 BackPropagation::BackPropagation(NeuralNetwork &nn): nn(nn){
 
@@ -14,17 +15,30 @@ BackPropagation::BackPropagation(NeuralNetwork &nn): nn(nn){
 
     ihPrevWeightsDelta.resize(numInput);
     for(unsigned int i = 0; i != numInput; ++i){
-        ihPrevWeightsDelta[i].resize(numHidden);
+         ihPrevWeightsDelta[i].resize(numHidden);
+         for(int j = 0; j != numHidden; ++j){
+            ihPrevWeightsDelta[i][j] = 0;
+         }
     }
 
     ihPrevBiasesDelta.resize(numHidden);
-    hoPrevWeightsDelta.resize(numHidden);
 
+    for(int i = 0; i != numHidden; ++i){
+        ihPrevBiasesDelta[i] = 0;
+    }
+
+    hoPrevWeightsDelta.resize(numHidden);
     for(unsigned int i = 0; i != numHidden; ++i){
         hoPrevWeightsDelta[i].resize(numOutput);
+        for(int j = 0; j != numOutput; ++j){
+            hoPrevWeightsDelta[i][j] = 0;
+        }
     }
 
     hoPrevBiasesDelta.resize(numOutput);
+    for(int i = 0; i != numOutput; ++i){
+        hoPrevBiasesDelta[i] = 0;
+    }
 }
 
 void BackPropagation::setLearningRate(double eta){
@@ -37,6 +51,10 @@ void BackPropagation::setMomentum(double alpha){
 
 void BackPropagation::setMaxIteration(int iteration){
     this->maxIteration = iteration;
+}
+
+void BackPropagation::setMinChangeRate(double rate){
+    this->minChangeRate = rate;
 }
 
 void BackPropagation::initializeWeights(){
@@ -64,6 +82,7 @@ void BackPropagation::initializeGradients(){
 void BackPropagation::trainStochastic(vector<vector<double> > &dataset){
     initializeWeights();
     int iteration = maxIteration;
+    double preError = 0;
     while(iteration--) {
         double error = 0;
         for(unsigned int i = 0; i != dataset.size(); ++i){
@@ -77,12 +96,15 @@ void BackPropagation::trainStochastic(vector<vector<double> > &dataset){
         }
         cout << "Iteration #" << maxIteration - iteration << "\tError:"
             << error/dataset.size() << endl;
+        if(fabs(error - preError)/preError < minChangeRate) break;
+        preError = error;
     }
 }
 
 void BackPropagation::trainBatch(vector<vector<double> > &dataset){
     initializeWeights();
     int iteration = maxIteration;
+    double preError = 0;
     while(iteration--) {
         double error = 0;
         initializeGradients();
@@ -96,6 +118,8 @@ void BackPropagation::trainBatch(vector<vector<double> > &dataset){
         if(iteration != 0) updateWeights();
         cout << "Iteration #" << maxIteration - iteration << "\tCost:"
             << error/(2*dataset.size()) << endl;
+        if(fabs(error - preError)/preError < minChangeRate) break;
+        preError = error;
     }
 }
 
@@ -148,7 +172,8 @@ void BackPropagation::updateWeights(){
         for(int j = 0; j != nn.ihWeights.size(); ++j){
             double delta = eta * hGrads[j] * nn.inputs[i];
             nn.ihWeights[i][j] += delta;
-            nn.ihWeights[i][j] += ihPrevWeightsDelta[i][j];
+            nn.ihWeights[i][j] += alpha * ihPrevWeightsDelta[i][j];
+            ihPrevWeightsDelta[i][j] = delta;
         }
     }
     // update input to hidden layer biases
@@ -156,5 +181,6 @@ void BackPropagation::updateWeights(){
         double delta = eta * hGrads[i] * 1.0;
         nn.ihBiases[i] += delta;
         nn.ihBiases[i] += alpha * ihPrevBiasesDelta[i];
+        ihPrevBiasesDelta[i] = delta;
     }
 }

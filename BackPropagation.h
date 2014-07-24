@@ -10,6 +10,7 @@ class BackPropagation{
         void setLearningRate(double eta);
         void setMomentum(double alpha);
         void setMaxIteration(int iteration);
+        void setMinChangeRate(double rate);
         void trainBatch(vector<vector<double> > &dataset);
         void trainStochastic(vector<vector<double> > &dataset);
 
@@ -19,9 +20,11 @@ class BackPropagation{
         int numInput;
         int numHidden;
         int numOutput;
+
         double eta; // learning rate
         double alpha; // momentum
         int maxIteration;
+        double minChangeRate;
 
         double getErrorSquare(vector<double> &output, vector<double> &yValues);
         void updateWeights(); // in-place update

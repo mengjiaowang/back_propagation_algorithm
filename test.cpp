@@ -17,12 +17,14 @@ int numAttr = 0;
 int main(int argc, char* argv[]){
 
     // commend line parameters
-    if(argc != 3){
+    if(argc != 5){
         cout << "Wrong Parameters!" << endl;
         return 0;
     }
     double learningRate = std::atof(argv[1]);
-    double maxIteration = std::atoi(argv[2]);
+    double momentum = std::atof(argv[2]);
+    double maxIteration = std::atoi(argv[3]);
+    double minChangeRate = std::atof(argv[4]);
 
     // prepare training data
     vector<vector<double> > dataset;
@@ -46,8 +48,9 @@ int main(int argc, char* argv[]){
     
     // start the training process
     bp.setLearningRate(learningRate);
-    bp.setMomentum(0.0);
+    bp.setMomentum(momentum);
     bp.setMaxIteration(maxIteration);
+    bp.setMinChangeRate(minChangeRate);
     bp.trainBatch(train);
     //bp.trainStochastic(train);
 
