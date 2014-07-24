@@ -23,7 +23,7 @@ class BackPropagation{
         double alpha; // momentum
         int maxIteration;
 
-        double getError(vector<double> &output, vector<double> &yValues);
+        double getErrorSquare(vector<double> &output, vector<double> &yValues);
         void updateWeights(); // in-place update
         void calculateGradients(vector<double> &yValues);
         void initializeWeights();

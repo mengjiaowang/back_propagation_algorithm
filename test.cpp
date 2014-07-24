@@ -33,12 +33,14 @@ int main(int argc, char* argv[]){
     // define network structure
     Sigmoid sigmoid;
     Tanh tanh;
-    NeuralNetwork nn(numAttr, 100, numLabels, sigmoid, tanh);
+    NeuralNetwork nn(numAttr, 10, numLabels, sigmoid, tanh);
     BackPropagation bp(nn);
 
     // normalization
     Normalization norm;
+    cout << dataset.size() << endl;
     norm.normalize(dataset, 0, numAttr-1);
+    cout << dataset.size() << endl;
     vector<vector<double> > train(dataset.begin(), dataset.end());
     vector<vector<double> > test(dataset.begin(), dataset.end());
     
@@ -65,7 +67,8 @@ void evaluation(NeuralNetwork &nn, vector<vector<double> > &test){
         int index = findMaximum(outputs);
         if(yValues[index] == 1) correct ++;
     }
-    cout << "Accuracy:" << (double)correct/test.size() << endl;
+    cout << "Accuracy:" << ((double)correct)/test.size() 
+         << "\tTest Size:" << test.size() << endl;
 }
 
 void loadDataset(const char *path, vector<vector<double> > &dataset){
@@ -77,7 +80,7 @@ void loadDataset(const char *path, vector<vector<double> > &dataset){
          << "The number of lables: " << numLabels << endl
          << "The number of attributes: " << numAttr << endl;
 
-    while(!datafile.eof()){
+    for(int j = 0; j != numRow; ++j){
         vector<double> row;
         dataset.push_back(row);
         double attribute = 0, label = 0;

@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-c -Wall -O2
-DEBUG=-g
+DEBUG=
 all: nn_test
 
 nn_test: test.o neural_network.o activation_function.o back_propagation.o normalization.o

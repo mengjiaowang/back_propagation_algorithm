@@ -71,7 +71,7 @@ void BackPropagation::trainStochastic(vector<vector<double> > &dataset){
             vector<double> xValues(dataset[i].begin(), dataset[i].begin() + numInput);
             vector<double> yValues(dataset[i].begin() + numInput, dataset[i].end());
             nn.computeOutputs(xValues);
-            error += getError(nn.outputs, yValues);
+            error += getErrorSquare(nn.outputs, yValues);
             calculateGradients(yValues);
             if(iteration != 0 || i != dataset.size() - 1) updateWeights();
         }
@@ -90,16 +90,16 @@ void BackPropagation::trainBatch(vector<vector<double> > &dataset){
             vector<double> xValues(dataset[i].begin(), dataset[i].begin() + numInput);
             vector<double> yValues(dataset[i].begin() + numInput, dataset[i].end());
             nn.computeOutputs(xValues);
-            error += getError(nn.outputs, yValues);
+            error += getErrorSquare(nn.outputs, yValues);
             calculateGradients(yValues);
         }
         if(iteration != 0) updateWeights();
-        cout << "Iteration #" << maxIteration - iteration << "\tError:"
-            << error/dataset.size() << endl;
+        cout << "Iteration #" << maxIteration - iteration << "\tCost:"
+            << error/(2*dataset.size()) << endl;
     }
 }
 
-double BackPropagation::getError(vector<double> &output, vector<double> &yValues){
+double BackPropagation::getErrorSquare(vector<double> &output, vector<double> &yValues){
     double error = 0;
     for(int i = 0; i != output.size(); ++i){
         error += (output[i] - yValues[i]) * (output[i] - yValues[i]);
