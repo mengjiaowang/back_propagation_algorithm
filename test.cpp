@@ -6,10 +6,18 @@
 
 using namespace std;
 
-void loadDataset(char *path, vector<vector<double> > &dataset);
+void loadDataset(const char *path, vector<vector<double> > &dataset);
 void evaluation(NeuralNetwork &nn, vector<vector<double> > &testdata);
 
-int main(){
+int main(int argc, char* argv[]){
+
+    // commend line parameters
+    if(argc != 3){
+        cout << "Wrong Parameters!" << endl;
+        return 0;
+    }
+    double learningRate = std::atof(argv[1]);
+    double maxIteration = std::atoi(argv[2]);
 
     // define network structure
     Sigmoid sigmoid;
@@ -19,7 +27,8 @@ int main(){
 
     // prepare training data
     vector<vector<double> > dataset;
-    loadDataset("data/wine.dat", dataset);
+    string file = "datasets/wine.dat";
+    loadDataset(file.c_str(), dataset);
 
     // normalization
     Normalization norm;
@@ -28,9 +37,9 @@ int main(){
     vector<vector<double> > test(dataset.begin(), dataset.end());
     
     // start the training process
-    bp.setLearningRate(0.0001);
+    bp.setLearningRate(learningRate);
     bp.setMomentum(0.0);
-    bp.setMaxIteration(10000);
+    bp.setMaxIteration(maxIteration);
     bp.trainBatch(train);
     //bp.trainStochastic(train);
 
@@ -54,9 +63,9 @@ void evaluation(NeuralNetwork &nn, vector<vector<double> > &test){
     cout << "Accuracy:" << (double)correct/test.size() << endl;
 }
 
-void loadDataset(char *path, vector<vector<double> > &dataset){
+void loadDataset(const char *path, vector<vector<double> > &dataset){
     fstream datafile;
-    datafile.open ("data/wine.dat", ios::in);
+    datafile.open (path, ios::in);
     while(!datafile.eof()){
         vector<double> row;
         dataset.push_back(row);
