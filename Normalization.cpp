@@ -1,6 +1,8 @@
 #include "Normalization.h"
 #include <vector>
 #include <iostream>
+#include <cstdlib>
+#include <limits>
 using namespace std;
 
 Normalization::Normalization(){

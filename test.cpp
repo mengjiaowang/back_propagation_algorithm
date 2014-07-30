@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 #include "NeuralNetwork.h"
 #include "BackPropagation.h"
 #include "Normalization.h"
@@ -19,16 +20,17 @@ int main(int argc, char* argv[]){
     // commend line parameters
     if(argc != 5){
         cout << "Wrong Parameters!" << endl;
+        cout << "Usage: ./nn_test learningRate monentum maxIteration minChangeRage" << endl;
         return 0;
     }
-    double learningRate = std::atof(argv[1]);
-    double momentum = std::atof(argv[2]);
-    double maxIteration = std::atoi(argv[3]);
-    double minChangeRate = std::atof(argv[4]);
+    double learningRate = atof(argv[1]);
+    double momentum = atof(argv[2]);
+    double maxIteration = atoi(argv[3]);
+    double minChangeRate = atof(argv[4]);
 
     // prepare training data
     vector<vector<double> > dataset;
-//    string file = "datasets/wine.dat";
+    // string file = "datasets/wine.dat";
     string file = "datasets/linear.dat";
     loadDataset(file.c_str(), dataset);
 
@@ -45,7 +47,7 @@ int main(int argc, char* argv[]){
     cout << dataset.size() << endl;
     vector<vector<double> > train(dataset.begin(), dataset.end());
     vector<vector<double> > test(dataset.begin(), dataset.end());
-    
+
     // start the training process
     bp.setLearningRate(learningRate);
     bp.setMomentum(momentum);
@@ -71,7 +73,7 @@ void evaluation(NeuralNetwork &nn, vector<vector<double> > &test){
         if(yValues[index] == 1) correct ++;
     }
     cout << "Accuracy:" << ((double)correct)/test.size() 
-         << "\tTest Size:" << test.size() << endl;
+        << "\tTest Size:" << test.size() << endl;
 }
 
 void loadDataset(const char *path, vector<vector<double> > &dataset){
@@ -80,8 +82,8 @@ void loadDataset(const char *path, vector<vector<double> > &dataset){
     datafile >> numRow >> numLabels >> numAttr;
 
     cout << "The number of instances: " << numRow << endl 
-         << "The number of lables: " << numLabels << endl
-         << "The number of attributes: " << numAttr << endl;
+        << "The number of lables: " << numLabels << endl
+        << "The number of attributes: " << numAttr << endl;
 
     for(int j = 0; j != numRow; ++j){
         vector<double> row;

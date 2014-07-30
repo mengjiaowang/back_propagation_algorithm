@@ -3,6 +3,7 @@
 #include <iostream>
 #include <ctime>
 #include <cmath>
+#include <cstdlib>
 
 BackPropagation::BackPropagation(NeuralNetwork &nn): nn(nn){
 
