@@ -11,9 +11,9 @@ void loadDataset(const char *path, vector<vector<double> > &dataset);
 void evaluation(NeuralNetwork &nn, vector<vector<double> > &testdata);
 int findMaximum(vector<double> & arr);
 
-int numRow = 0;
-int numLabels = 0;
-int numAttr = 0;
+unsigned int numRow = 0;
+unsigned int numLabels = 0;
+unsigned int numAttr = 0;
 
 int main(int argc, char* argv[]){
 
@@ -41,9 +41,9 @@ int main(int argc, char* argv[]){
     BackPropagation bp(nn);
 
     // normalization
-    Normalization norm;
+    StudentTNormalization norm;
     cout << dataset.size() << endl;
-    norm.normalize(dataset, 0, numAttr-1);
+    norm.normalize(dataset, 0u, numAttr-1);
     cout << dataset.size() << endl;
     vector<vector<double> > train(dataset.begin(), dataset.end());
     vector<vector<double> > test(dataset.begin(), dataset.end());
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]){
 void evaluation(NeuralNetwork &nn, vector<vector<double> > &test){
 
     int correct = 0;
-    for(int i = 0; i != test.size(); ++i){
+    for(unsigned int i = 0; i != test.size(); ++i){
         vector<double> xValues(test[i].begin(), test[i].begin()+numAttr);
         vector<double> yValues(test[i].begin()+numAttr, test[i].end());
         vector<double> &outputs = nn.computeOutputs(xValues);
@@ -85,16 +85,16 @@ void loadDataset(const char *path, vector<vector<double> > &dataset){
         << "The number of lables: " << numLabels << endl
         << "The number of attributes: " << numAttr << endl;
 
-    for(int j = 0; j != numRow; ++j){
+    for(unsigned int j = 0; j != numRow; ++j){
         vector<double> row;
         dataset.push_back(row);
         double attribute = 0, label = 0;
         datafile >> label;
-        for(int i = 0; i != numAttr; i ++){
+        for(unsigned int i = 0; i != numAttr; i ++){
             datafile >> attribute;
             dataset.back().push_back(attribute);
         }
-        for(int i = 0; i != numLabels; ++i){
+        for(unsigned int i = 0; i != numLabels; ++i){
             dataset.back().push_back(0);
         }
         dataset.back()[numAttr+label-1] = 1;
@@ -107,7 +107,7 @@ int findMaximum(vector<double> & arr){
     if(arr.size() == 0) return -1;
     double max = arr[0];
     int index = 0;
-    for(int i = 1; i != arr.size(); ++i){
+    for(unsigned int i = 1; i != arr.size(); ++i){
         if(max < arr[i]){
             max = arr[i];
             index = i;

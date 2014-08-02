@@ -17,27 +17,27 @@ BackPropagation::BackPropagation(NeuralNetwork &nn): nn(nn){
     ihPrevWeightsDelta.resize(numInput);
     for(unsigned int i = 0; i != numInput; ++i){
          ihPrevWeightsDelta[i].resize(numHidden);
-         for(int j = 0; j != numHidden; ++j){
+         for(unsigned int j = 0; j != numHidden; ++j){
             ihPrevWeightsDelta[i][j] = 0;
          }
     }
 
     ihPrevBiasesDelta.resize(numHidden);
 
-    for(int i = 0; i != numHidden; ++i){
+    for(unsigned int i = 0; i != numHidden; ++i){
         ihPrevBiasesDelta[i] = 0;
     }
 
     hoPrevWeightsDelta.resize(numHidden);
     for(unsigned int i = 0; i != numHidden; ++i){
         hoPrevWeightsDelta[i].resize(numOutput);
-        for(int j = 0; j != numOutput; ++j){
+        for(unsigned int j = 0; j != numOutput; ++j){
             hoPrevWeightsDelta[i][j] = 0;
         }
     }
 
     hoPrevBiasesDelta.resize(numOutput);
-    for(int i = 0; i != numOutput; ++i){
+    for(unsigned int i = 0; i != numOutput; ++i){
         hoPrevBiasesDelta[i] = 0;
     }
 }
@@ -50,7 +50,7 @@ void BackPropagation::setMomentum(double alpha){
     this->alpha = alpha;
 }
 
-void BackPropagation::setMaxIteration(int iteration){
+void BackPropagation::setMaxIteration(unsigned int iteration){
     this->maxIteration = iteration;
 }
 
@@ -60,11 +60,11 @@ void BackPropagation::setMinChangeRate(double rate){
 
 void BackPropagation::initializeWeights(){
     srand(time(0));
-    int numWeights = (numInput + numOutput) * numHidden + numHidden + numOutput;
+    unsigned int numWeights = (numInput + numOutput) * numHidden + numHidden + numOutput;
     vector<double> weight;
     weight.resize(numWeights);
-    for(int i = 0; i != numWeights; ++i){
-        int r = rand() % 100000 + 1;
+    for(unsigned int i = 0; i != numWeights; ++i){
+        unsigned int r = rand() % 100000 + 1;
         double w = r/100000.0;
         weight[i] = w;
     }
@@ -72,17 +72,17 @@ void BackPropagation::initializeWeights(){
 }
 
 void BackPropagation::initializeGradients(){
-    for(int i = 0; i != oGrads.size(); ++i){
+    for(unsigned int i = 0; i != oGrads.size(); ++i){
         oGrads[i] = 0;
     }
-    for(int i = 0; i != hGrads.size(); ++i){
+    for(unsigned int i = 0; i != hGrads.size(); ++i){
         hGrads[i] = 0;
     }
 }
 
 void BackPropagation::trainStochastic(vector<vector<double> > &dataset){
     initializeWeights();
-    int iteration = maxIteration;
+    unsigned int iteration = maxIteration;
     double preError = 0;
     while(iteration--) {
         double error = 0;
@@ -104,7 +104,7 @@ void BackPropagation::trainStochastic(vector<vector<double> > &dataset){
 
 void BackPropagation::trainBatch(vector<vector<double> > &dataset){
     initializeWeights();
-    int iteration = maxIteration;
+    unsigned int iteration = maxIteration;
     double preError = 0;
     while(iteration--) {
         double error = 0;
@@ -126,7 +126,7 @@ void BackPropagation::trainBatch(vector<vector<double> > &dataset){
 
 double BackPropagation::getErrorSquare(vector<double> &output, vector<double> &yValues){
     double error = 0;
-    for(int i = 0; i != output.size(); ++i){
+    for(unsigned int i = 0; i != output.size(); ++i){
         error += (output[i] - yValues[i]) * (output[i] - yValues[i]);
     }
     return error;
@@ -138,13 +138,13 @@ void BackPropagation::calculateGradients(vector<double> &yValues){
         return;
     }
     // compute the output gradients
-    for(int i = 0; i != oGrads.size(); ++i){
+    for(unsigned int i = 0; i != oGrads.size(); ++i){
         oGrads[i] += nn.outputActi.derivative(nn.outputs[i]) * (yValues[i] - nn.outputs[i]);
     }
     // compute the hidden gradients
-    for(int i = 0; i != hGrads.size(); ++i){
+    for(unsigned int i = 0; i != hGrads.size(); ++i){
         double sum = 0.0;
-        for(int j = 0; j != numOutput; ++j){
+        for(unsigned int j = 0; j != numOutput; ++j){
             sum += oGrads[j] * nn.hoWeights[i][j];
         }
         hGrads[i] += nn.hiddenActi.derivative(nn.ihOutputs[i]) * sum;
@@ -153,8 +153,8 @@ void BackPropagation::calculateGradients(vector<double> &yValues){
 
 void BackPropagation::updateWeights(){
     // update hidden to output weights
-    for(int i = 0; i != nn.hoWeights.size(); ++i){
-        for(int j = 0; j != nn.hoWeights[i].size(); ++j){
+    for(unsigned int i = 0; i != nn.hoWeights.size(); ++i){
+        for(unsigned int j = 0; j != nn.hoWeights[i].size(); ++j){
             double delta = eta * oGrads[j] * nn.ihOutputs[i];
             nn.hoWeights[i][j] += delta;
             nn.hoWeights[i][j] += alpha * hoPrevWeightsDelta[i][j];
@@ -162,15 +162,15 @@ void BackPropagation::updateWeights(){
         }
     }
     // update hidden to output biases
-    for(int i = 0; i != nn.hoBiases.size(); ++i){
+    for(unsigned int i = 0; i != nn.hoBiases.size(); ++i){
         double delta = eta * oGrads[i] * 1.0;
         nn.hoBiases[i] += delta;
         nn.hoBiases[i] += alpha * hoPrevBiasesDelta[i];
         hoPrevBiasesDelta[i] = delta;
     }
     // update input to hidden layer weights
-    for(int i = 0; i != nn.ihWeights.size(); ++i){
-        for(int j = 0; j != nn.ihWeights.size(); ++j){
+    for(unsigned int i = 0; i != nn.ihWeights.size(); ++i){
+        for(unsigned int j = 0; j != nn.ihWeights.size(); ++j){
             double delta = eta * hGrads[j] * nn.inputs[i];
             nn.ihWeights[i][j] += delta;
             nn.ihWeights[i][j] += alpha * ihPrevWeightsDelta[i][j];
@@ -178,7 +178,7 @@ void BackPropagation::updateWeights(){
         }
     }
     // update input to hidden layer biases
-    for(int i = 0; i != nn.ihBiases.size(); ++i){
+    for(unsigned int i = 0; i != nn.ihBiases.size(); ++i){
         double delta = eta * hGrads[i] * 1.0;
         nn.ihBiases[i] += delta;
         nn.ihBiases[i] += alpha * ihPrevBiasesDelta[i];

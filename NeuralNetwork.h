@@ -10,14 +10,14 @@ class NeuralNetwork{
     friend class BackPropagation;
     public:
         
-        NeuralNetwork(int numInput, int numHidden, int numOutput, 
+        NeuralNetwork(unsigned int numInput, unsigned int numHidden, unsigned int numOutput, 
                 ActivationFunction &hidden, ActivationFunction &output);
         void setWeights(vector<double> &weights);
         void getWeights(vector<double> &weights);
         vector<double> &computeOutputs(vector<double> &xValues);
-        int getNumInput();
-        int getNumHidden();
-        int getNumOutput();
+        unsigned int getNumInput();
+        unsigned int getNumHidden();
+        unsigned int getNumOutput();
 
     protected: // Neural Network Parameters //
 
@@ -40,9 +40,9 @@ class NeuralNetwork{
 
     private:
 
-        int numInput;
-        int numHidden;
-        int numOutput;
+        unsigned int numInput;
+        unsigned int numHidden;
+        unsigned int numOutput;
 };
 
 #endif

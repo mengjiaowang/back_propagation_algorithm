@@ -9,7 +9,7 @@ class BackPropagation{
         BackPropagation(NeuralNetwork &nn);
         void setLearningRate(double eta);
         void setMomentum(double alpha);
-        void setMaxIteration(int iteration);
+        void setMaxIteration(unsigned int iteration);
         void setMinChangeRate(double rate);
         void trainBatch(vector<vector<double> > &dataset);
         void trainStochastic(vector<vector<double> > &dataset);
@@ -17,13 +17,13 @@ class BackPropagation{
     private:
 
         NeuralNetwork &nn;
-        int numInput;
-        int numHidden;
-        int numOutput;
+        unsigned int numInput;
+        unsigned int numHidden;
+        unsigned int numOutput;
 
         double eta; // learning rate
         double alpha; // momentum
-        int maxIteration;
+        unsigned int maxIteration;
         double minChangeRate;
 
         double getErrorSquare(vector<double> &output, vector<double> &yValues);
